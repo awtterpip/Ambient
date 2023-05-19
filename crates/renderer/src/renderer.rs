@@ -255,6 +255,7 @@ impl Renderer {
                         | wgpu::TextureUsages::TEXTURE_BINDING
                         | wgpu::TextureUsages::COPY_DST,
                 ),
+                None,
             ),
             outlines: Outlines::new(
                 &assets,
@@ -297,6 +298,7 @@ impl Renderer {
                             | wgpu::TextureUsages::TEXTURE_BINDING
                             | wgpu::TextureUsages::COPY_DST,
                     ),
+                    None,
                 );
             }
         }

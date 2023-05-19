@@ -276,6 +276,7 @@ pub fn GameClientWorld(hooks: &mut Hooks) -> Element {
                 gpu.clone(),
                 (size * scale_factor as f32).as_uvec2().max(UVec2::ONE),
                 None,
+                None,
             ))))
         }),
     )

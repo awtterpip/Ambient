@@ -33,9 +33,10 @@ pub struct RenderTarget {
     pub color_buffer_view: TextureView,
     pub normals_quat_buffer: Arc<Texture>,
     pub normals_quat_buffer_view: TextureView,
+    pub multiview: Option<u32>,
 }
 impl RenderTarget {
-    pub fn new(gpu: Arc<Gpu>, size: UVec2, usage: Option<wgpu::TextureUsages>) -> Self {
+    pub fn new(gpu: Arc<Gpu>, size: UVec2, usage: Option<wgpu::TextureUsages>, multiview: Option<u32>) -> Self {
         let usage = usage.unwrap_or(
             wgpu::TextureUsages::RENDER_ATTACHMENT
                 | wgpu::TextureUsages::TEXTURE_BINDING
@@ -49,7 +50,7 @@ impl RenderTarget {
                 size: wgpu::Extent3d {
                     width: sc_desc.width,
                     height: sc_desc.height,
-                    depth_or_array_layers: 1,
+                    depth_or_array_layers: multiview.unwrap_or(1),
                 },
                 mip_level_count: 1,
                 sample_count: DEFAULT_SAMPLE_COUNT,
@@ -66,7 +67,7 @@ impl RenderTarget {
                 size: wgpu::Extent3d {
                     width: sc_desc.width,
                     height: sc_desc.height,
-                    depth_or_array_layers: 1,
+                    depth_or_array_layers: multiview.unwrap_or(1),
                 },
                 mip_level_count: 1,
                 sample_count: 1,
@@ -83,7 +84,7 @@ impl RenderTarget {
                 size: wgpu::Extent3d {
                     width: sc_desc.width,
                     height: sc_desc.height,
-                    depth_or_array_layers: 1,
+                    depth_or_array_layers: multiview.unwrap_or(1),
                 },
                 mip_level_count: 1,
                 sample_count: 1,
@@ -93,19 +94,29 @@ impl RenderTarget {
                 view_formats: &[],
             },
         ));
+        let dimension = multiview.map(|_| wgpu::TextureViewDimension::D2Array );
         Self {
             depth_buffer_view: depth_buffer.create_view(&TextureViewDescriptor {
                 aspect: wgpu::TextureAspect::DepthOnly,
+                dimension,
                 ..Default::default()
             }),
             depth_stencil_view: depth_buffer.create_view(&TextureViewDescriptor {
+                dimension,
                 ..Default::default()
             }),
             depth_buffer,
-            color_buffer_view: color_buffer.create_view(&Default::default()),
+            color_buffer_view: color_buffer.create_view(&TextureViewDescriptor {
+                dimension,
+                ..Default::default()
+            }),
             color_buffer,
-            normals_quat_buffer_view: normals_buffer.create_view(&Default::default()),
+            normals_quat_buffer_view: normals_buffer.create_view(&TextureViewDescriptor {
+                dimension,
+                ..Default::default()
+            }),
             normals_quat_buffer: normals_buffer,
+            multiview,
         }
     }
 }

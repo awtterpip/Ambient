@@ -90,7 +90,7 @@ impl MainRenderer {
         let wind_size = *world.resource(ambient_core::window::window_physical_size());
 
         tracing::debug!("Creating render target");
-        let render_target = RenderTarget::new(gpu.clone(), wind_size, None);
+        let render_target = RenderTarget::new(gpu.clone(), wind_size, None, None);
 
         tracing::debug!("Creating self");
 
@@ -152,7 +152,7 @@ impl MainRenderer {
 
         if size.width > 0 && size.height > 0 {
             self.render_target =
-                RenderTarget::new(self.gpu.clone(), uvec2(size.width, size.height), None);
+                RenderTarget::new(self.gpu.clone(), uvec2(size.width, size.height), None, None);
         }
     }
 

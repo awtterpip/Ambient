@@ -59,7 +59,7 @@ impl ElementComponent for GameClientView {
         let gpu = hooks.world.resource(gpu()).clone();
 
         hooks.provide_context(|| {
-            GameClientRenderTarget(Arc::new(RenderTarget::new(gpu.clone(), uvec2(1, 1), None)))
+            GameClientRenderTarget(Arc::new(RenderTarget::new(gpu.clone(), uvec2(1, 1), None, None)))
         });
         let (render_target, _) = hooks.consume_context::<GameClientRenderTarget>().unwrap();
 
