@@ -106,6 +106,7 @@ impl ShadowsRenderer {
                     globals: ShadowAndUIGlobals::new(
                         assets.clone(),
                         renderer_resources.globals_layout.clone(),
+                        1,
                     ),
                     camera: Camera::default(),
                     collect_state: RendererCollectState::new(&assets),
