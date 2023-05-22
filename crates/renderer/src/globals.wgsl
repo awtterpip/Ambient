@@ -30,47 +30,35 @@ struct ShadowCamera {
     near: f32,
 };
 
-struct ViewParams {
-    projection_view: mat4x4<f32>,
-    inv_projection_view: mat4x4<f32>,
-    view_position: vec4<f32>,
-    view_forward: vec4<f32>,
-    forward_view_position: vec4<f32>,
-}
-
 @group(GLOBALS_BIND_GROUP)
 @binding(1)
 var<uniform> global_params: ForwardGlobalParams;
-
-@group(GLOBALS_BIND_GROUP)
-@binding(2)
-var<storage> view_params: array<ViewParams>;
 
 struct ShadowCameras {
     cameras: array<ShadowCamera>,
 };
 
 @group(GLOBALS_BIND_GROUP)
-@binding(3)
+@binding(2)
 var<storage> shadow_cameras: ShadowCameras;
 
 @group(GLOBALS_BIND_GROUP)
-@binding(4)
+@binding(3)
 var shadow_sampler: sampler_comparison;
 @group(GLOBALS_BIND_GROUP)
-@binding(5)
+@binding(4)
 var shadow_texture: texture_depth_2d_array;
 
 @group(GLOBALS_BIND_GROUP)
-@binding(6)
+@binding(5)
 var solids_screen_color: texture_2d<f32>;
 
 @group(GLOBALS_BIND_GROUP)
-@binding(7)
+@binding(6)
 var solids_screen_depth: texture_depth_2d;
 
 @group(GLOBALS_BIND_GROUP)
-@binding(8)
+@binding(7)
 var solids_screen_normal_quat: texture_2d<f32>;
 
 fn inside(v: vec3<f32>) -> bool {

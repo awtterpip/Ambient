@@ -30,7 +30,7 @@ use wgpu::{BindGroupLayout, BindGroupLayoutEntry, TextureView};
 pub const GLOBALS_BIND_GROUP: &str = "GLOBALS_BIND_GROUP";
 pub const MATERIAL_BIND_GROUP: &str = "MATERIAL_BIND_GROUP";
 pub const PRIMITIVES_BIND_GROUP: &str = "PRIMITIVES_BIND_GROUP";
-pub const GLOBALS_BIND_GROUP_SIZE: u32 = 9;
+pub const GLOBALS_BIND_GROUP_SIZE: u32 = 8;
 
 pub const MESH_METADATA_BINDING: u32 = 0;
 pub const MESH_BASE_BINDING: u32 = 1;
@@ -206,7 +206,6 @@ impl Renderer {
                 gpu.clone(),
                 renderer_resources.globals_layout.clone(),
                 shadow_cascades,
-                1,
                 config.scene,
             ),
             forward_collect_state: RendererCollectState::new(&assets),
