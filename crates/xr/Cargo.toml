@@ -1,0 +1,25 @@
+[package]
+name = "ambient_xr"
+version = { workspace = true }
+rust-version = { workspace = true }
+edition = "2021"
+description = "Ambient world audio. Host-only."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/AmbientRun/Ambient"
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ambient_sys = { path = "../sys" , version = "0.2.1" }
+ambient_std = { path = "../std" , version = "0.2.1" }
+ambient_gpu = { path = "../gpu", version = "0.2.1" }
+
+openxr = { workspace = true }
+wgpu = { workspace = true }
+wgpu_hal = { workspace = true }
+anyhow = { workspace = true }
+winit = { workspace = true }
+glam = { workspace = true }
+tracing = { workspace = true }
+ash = "0.37.2"

@@ -171,7 +171,7 @@ impl Gpu {
     pub fn sc_desc(&self, size: UVec2) -> wgpu::SurfaceConfiguration {
         Self::create_sc_desc(self.swapchain_format(), self.swapchain_mode(), size)
     }
-    fn create_sc_desc(
+    pub fn create_sc_desc(
         format: TextureFormat,
         present_mode: PresentMode,
         size: UVec2,

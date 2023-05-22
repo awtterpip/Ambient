@@ -14,6 +14,7 @@ ambient_ecs = { path = "../ecs" , version = "0.2.1" }
 ambient_sys = { path = "../sys" , version = "0.2.1" }
 ambient_std = { path = "../std" , version = "0.2.1" }
 ambient_gpu = { path = "../gpu" , version = "0.2.1" }
+ambient_xr = { path = "../xr", version = "0.2.1" }
 
 itertools = { workspace = true }
 yaml-rust = { workspace = true }

@@ -2,6 +2,7 @@
 extern crate lazy_static;
 
 use ambient_sys::{task::RuntimeHandle, time::Instant, time::SystemTime};
+use ambient_xr::XrState;
 use chrono::{DateTime, Utc};
 use std::{sync::Arc, time::Duration};
 

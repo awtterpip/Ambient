@@ -1,0 +1,4 @@
+
+[components."core::xr"]
+name = "XR"
+description = "OpenXR components."

@@ -35,6 +35,7 @@ use ambient_std::{
     fps_counter::{FpsCounter, FpsSample},
 };
 use ambient_sys::{task::RuntimeHandle, time::SystemTime};
+use ambient_xr::{XrState, XrKey};
 use glam::{uvec2, vec2, UVec2, Vec2};
 use parking_lot::Mutex;
 use renderers::{main_renderer, ui_renderer, UiRenderer, MainRenderer};
@@ -374,11 +375,14 @@ impl AppBuilder {
             .unwrap_or_else(|| AssetCache::new(runtime.clone()));
 
         let mut world = World::new("main_app");
-        let gpu = Arc::new(Gpu::with_config(window.as_deref(), true, &settings).await);
+        let (gpu, xrstate) = XrState::initialize_with_wgpu(window.as_deref(), true, &settings).await?;
+        let gpu = Arc::new(gpu);
+        //let gpu = Arc::new(Gpu::with_config(window.as_deref(), true, &settings).await);
 
         tracing::debug!("Inserting runtime");
         RuntimeKey.insert(&assets, runtime.clone());
         GpuKey.insert(&assets, gpu.clone());
+        XrKey.insert(&assets, xrstate.clone());
         // WindowKey.insert(&assets, window.clone());
 
         tracing::debug!("Inserting app resources");
