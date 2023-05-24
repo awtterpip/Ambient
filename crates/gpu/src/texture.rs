@@ -101,6 +101,25 @@ impl Texture {
             gpu,
         }
     }
+    pub unsafe fn new_from_hal<A: wgpu_core::hub::HalApi>(gpu: Arc<Gpu>, hal_texture: A::Texture, descriptor: &wgpu::TextureDescriptor) -> Self {
+        TEXTURE_ALIVE_COUNT.fetch_add(1, Ordering::SeqCst);
+        let id = TEXTURE_ID_COUNT.fetch_add(1, Ordering::SeqCst);
+        let size_in_bytes = Self::size_in_bytes_from_desc(descriptor);
+        TEXTURES_TOTAL_SIZE.fetch_add(size_in_bytes, Ordering::SeqCst);
+        Self {
+            id,
+            label: descriptor.label.map(|x| x.to_string()),
+            size: descriptor.size,
+            size_in_bytes,
+            format: descriptor.format,
+            sample_count: descriptor.sample_count,
+            mip_level_count: descriptor.mip_level_count,
+            handle: gpu
+                .device
+                .create_texture_from_hal::<A>(hal_texture, descriptor),
+            gpu,
+        }
+    }
     pub fn from_file<P: AsRef<Path> + std::fmt::Debug>(
         gpu: Arc<Gpu>,
         path: P,

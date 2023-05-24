@@ -35,6 +35,8 @@ components!("app", {
     runtime: RuntimeHandle,
     @[Resource]
     gpu: Arc<Gpu>,
+    @[Resource]
+    openxr: Arc<XrState>,
     @[Debuggable]
     mesh: Arc<GpuMesh>,
 

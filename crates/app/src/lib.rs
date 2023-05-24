@@ -16,7 +16,7 @@ use ambient_core::{
         cursor_position, get_window_sizes, window_logical_size, window_physical_size,
         window_scale_factor, WindowCtl,
     },
-    RuntimeKey, TimeResourcesSystem,
+    RuntimeKey, TimeResourcesSystem, openxr,
 };
 use ambient_ecs::{
     components, world_events, Debuggable, DynSystem, Entity, FrameEvent, MakeDefault,
@@ -375,8 +375,7 @@ impl AppBuilder {
             .unwrap_or_else(|| AssetCache::new(runtime.clone()));
 
         let mut world = World::new("main_app");
-        let (gpu, xrstate) = XrState::initialize_with_wgpu(window.as_deref(), true, &settings).await?;
-        let gpu = Arc::new(gpu);
+        let (gpu, xrstate) = XrState::initialize_with_wgpu(window.as_deref(), true, &settings).await.unwrap();
         //let gpu = Arc::new(Gpu::with_config(window.as_deref(), true, &settings).await);
 
         tracing::debug!("Inserting runtime");
@@ -411,6 +410,8 @@ impl AppBuilder {
         world
             .add_components(world.resource_entity(), resources)
             .unwrap();
+
+        world.add_resource(openxr(), xrstate);
         tracing::debug!("Setup renderers");
         if self.ui_renderer || self.main_renderer {
             // let _span = info_span!("setup_renderers").entered();

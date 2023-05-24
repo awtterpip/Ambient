@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use ambient_core::{asset_cache, gpu, main_scene, ui_scene, window::window_physical_size};
+use ambient_core::{asset_cache, gpu, main_scene, openxr, ui_scene, window::window_physical_size};
 use ambient_ecs::{components, query, FrameEvent, System, SystemGroup, World};
 use ambient_gizmos::render::GizmoRenderer;
 use ambient_gpu::{
@@ -12,6 +12,7 @@ use ambient_gpu::{
 use ambient_renderer::{renderer_stats, RenderTarget, Renderer, RendererConfig, RendererTarget};
 use ambient_std::{asset_cache::SyncAssetKeyExt, color::Color};
 use ambient_ui_native::app_background_color;
+use ambient_xr::XrState;
 use glam::{uvec2, UVec2};
 use parking_lot::Mutex;
 use tracing::info_span;
@@ -73,6 +74,7 @@ pub fn systems() -> SystemGroup<Event<'static, ()>> {
 
 pub struct MainRenderer {
     gpu: Arc<Gpu>,
+    xr: Option<Arc<XrState>>,
     main: Option<Renderer>,
     ui: Option<Renderer>,
     blit: Arc<Blitter>,
@@ -83,6 +85,7 @@ pub struct MainRenderer {
 impl MainRenderer {
     pub fn new(world: &mut World, ui: bool, main: bool) -> Self {
         let gpu = world.resource(gpu()).clone();
+        let xr = world.resource_opt(openxr()).cloned();
         let assets = world.resource(asset_cache()).clone();
         world
             .add_component(world.resource_entity(), renderer_stats(), "".to_string())
@@ -105,6 +108,7 @@ impl MainRenderer {
         };
 
         Self {
+            xr,
             main: if main {
                 tracing::debug!("Creating renderer");
                 let mut renderer = Renderer::new(
@@ -196,11 +200,15 @@ impl System for MainRenderer {
     fn run(&mut self, world: &mut World, _: &FrameEvent) {
         // tracing::info!("MainRenderer");
         ambient_profiling::scope!("Renderers.run");
+
+        let xr_frame_state = self.xr.as_ref().and_then(|x| x.pre_frame().unwrap());
         let mut encoder = self
             .gpu
             .device
             .create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
         let mut post_submit = Vec::new();
+
+        let pfd;
 
         if let Some(main) = &mut self.main {
             ambient_profiling::scope!("Main");
@@ -261,6 +269,11 @@ impl System for MainRenderer {
                     &self.render_target.color_buffer_view,
                     &frame_view,
                 );
+                pfd = self
+                    .xr
+                    .as_ref()
+                    .zip(xr_frame_state)
+                    .map(|(xr_state, xr_frame_state)| xr_state.post_frame(xr_frame_state).unwrap());
 
                 {
                     ambient_profiling::scope!("Submit");
@@ -272,10 +285,20 @@ impl System for MainRenderer {
                 }
             } else {
                 ambient_profiling::scope!("Submit");
+                pfd = self
+                    .xr
+                    .as_ref()
+                    .zip(xr_frame_state)
+                    .map(|(xr_state, xr_frame_state)| xr_state.post_frame(xr_frame_state).unwrap());
                 self.gpu.queue.submit(Some(encoder.finish()));
             }
         } else {
             {
+                pfd = self
+                    .xr
+                    .as_ref()
+                    .zip(xr_frame_state)
+                    .map(|(xr_state, xr_frame_state)| xr_state.post_frame(xr_frame_state).unwrap());
                 ambient_profiling::scope!("Submit");
                 self.gpu.queue.submit(Some(encoder.finish()));
             }
@@ -284,6 +307,12 @@ impl System for MainRenderer {
         for action in post_submit.into_iter() {
             action();
         }
+
+        self.xr
+            .as_ref()
+            .zip(xr_frame_state)
+            .zip(pfd)
+            .map(|((x, frame_state), pfd)| x.post_queue_submit(frame_state, &pfd.views).unwrap());
 
         world
             .set(world.resource_entity(), renderer_stats(), self.stats())

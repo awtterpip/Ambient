@@ -18,6 +18,8 @@ aho-corasick = { workspace = true }
 bytemuck = { workspace = true }
 winit = { workspace = true }
 wgpu = { workspace = true }
+wgpu_core = { workspace = true }
+wgpu_hal = { workspace = true }
 glam = { workspace = true }
 log = { workspace = true }
 thiserror = { workspace = true }

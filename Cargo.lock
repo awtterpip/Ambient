@@ -734,6 +734,8 @@ dependencies = [
  "toml 0.7.3",
  "tracing",
  "wgpu",
+ "wgpu-core",
+ "wgpu-hal",
  "winit",
 ]
 
@@ -1604,8 +1606,10 @@ dependencies = [
  "ash",
  "glam 0.22.0",
  "openxr",
+ "parking_lot",
  "tracing",
  "wgpu",
+ "wgpu-core",
  "wgpu-hal",
  "winit",
 ]

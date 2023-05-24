@@ -19,6 +19,7 @@ tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
 tracing-log = { version = "0.1" }
 wgpu = { git = "https://github.com/gfx-rs/wgpu.git", package = "wgpu"}
 wgpu_hal = { git = "https://github.com/gfx-rs/wgpu.git", package = "wgpu-hal"}
+wgpu_core = { git = "https://github.com/gfx-rs/wgpu.git", package = "wgpu-core"}
 winit = { version = "0.28.1", features = ["serde"] }
 futures = { version = "0.3", default-features = false, features = ["std"] }
 tokio = { version = "1.20", features = ["parking_lot"] }
