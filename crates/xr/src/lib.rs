@@ -115,6 +115,7 @@ impl XrState {
         let flags = wgpu_hal::InstanceFlags::empty();
         let extensions =
             <V as Api>::Instance::required_extensions(&vk_entry, vk_target_version, flags)?;
+        let device_extensions = vec![ash::extensions::khr::Swapchain::name()];
         tracing::info!(
             "creating vulkan instance with these extensions: {:#?}",
             extensions
@@ -193,6 +194,7 @@ impl XrState {
             .required_device_extensions(wgpu_features);
 
         let (wgpu_open_device, vk_device_ptr, queue_family_index) = {
+            let extensions_cchar: Vec<_> = device_extensions.iter().map(|s| s.as_ptr()).collect();
             let mut enabled_phd_features = wgpu_exposed_adapter
                 .adapter
                 .physical_device_features(&enabled_extensions, wgpu_features);
@@ -211,6 +213,7 @@ impl XrState {
                             ..Default::default()
                         }),
                 )
+                .enabled_extension_names(&extensions_cchar)
                 .build();
             let vk_device = unsafe {
                 let vk_device = xr_instance

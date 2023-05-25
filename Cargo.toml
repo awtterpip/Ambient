@@ -152,7 +152,7 @@ enum_dispatch = "0.3"
 uuid = "1.3"
 scopeguard = "1.0"
 rustls-native-certs = "0.6.2"
-openxr = { version = "0.17.1", features = ["linked"] }
+openxr = { version = "0.17.1", features = [] }
 
 #
 # WASM dependencies. Should be able to move off these once this all begins to stabilise a little.
