@@ -115,7 +115,7 @@ impl XrState {
         let flags = wgpu_hal::InstanceFlags::empty();
         let extensions =
             <V as Api>::Instance::required_extensions(&vk_entry, vk_target_version, flags)?;
-        let device_extensions = vec![ash::extensions::khr::Swapchain::name()];
+        let device_extensions = vec![ash::extensions::khr::Swapchain::name(), ash::extensions::khr::DrawIndirectCount::name()];
         tracing::info!(
             "creating vulkan instance with these extensions: {:#?}",
             extensions
