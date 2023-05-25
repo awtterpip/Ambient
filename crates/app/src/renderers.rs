@@ -274,7 +274,11 @@ impl System for MainRenderer {
                     .as_ref()
                     .zip(xr_frame_state)
                     .map(|(xr_state, xr_frame_state)| xr_state.post_frame(xr_frame_state).unwrap());
-
+                self.blit.run(
+                    &mut encoder,
+                    &self.render_target.color_buffer_view,
+                    &pfd.as_ref().unwrap().target.as_ref().unwrap(),
+                );
                 {
                     ambient_profiling::scope!("Submit");
                     self.gpu.queue.submit(Some(encoder.finish()));

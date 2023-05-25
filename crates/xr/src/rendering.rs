@@ -29,6 +29,14 @@ impl FrameInner {
         swapchain.get_render_view()
     }
 
+    pub fn get_single_render_view(&mut self) -> wgpu::TextureView {
+        let swapchain = self.swapchain.get_or_insert_with(|| {
+            Swapchain::new(self.gpu.clone(), self.session.clone(), self.views[0])
+        });
+
+        swapchain.get_render_view()
+    }
+
     pub fn post_queue_submit(
         &mut self,
         xr_frame_state: xr::FrameState,

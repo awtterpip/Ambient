@@ -98,7 +98,7 @@ impl Swapchain {
         }
     }
 
-    pub(crate) fn get_render_view(&mut self) -> wgpu::TextureView {
+    pub(crate) fn get_render_view(&mut self, ) -> wgpu::TextureView {
         let image_index = self.handle.acquire_image().unwrap();
         self.handle.wait_image(xr::Duration::INFINITE).unwrap();
 
@@ -107,6 +107,19 @@ impl Swapchain {
         texture.create_view(&wgpu::TextureViewDescriptor {
             dimension: Some(wgpu::TextureViewDimension::D2Array),
             array_layer_count: Some(2),
+            ..Default::default()
+        })
+    }
+
+    pub(crate) fn get_single_render_view(&mut self) -> wgpu::TextureView {
+        let image_index = self.handle.acquire_image().unwrap();
+        self.handle.wait_image(xr::Duration::INFINITE).unwrap();
+
+        let texture = &self.buffers[image_index as usize];
+
+        texture.create_view(&wgpu::TextureViewDescriptor {
+            dimension: Some(wgpu::TextureViewDimension::D2),
+            array_layer_count: Some(1),
             ..Default::default()
         })
     }

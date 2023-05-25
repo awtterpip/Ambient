@@ -397,7 +397,7 @@ impl XrState {
 
     pub fn post_frame(&self, xr_frame_state: xr::FrameState) -> anyhow::Result<PostFrameData> {
         let mut pfd = self.input.post_frame(xr_frame_state)?;
-        pfd.target = Some(self.frame.lock().get_render_view());
+        pfd.target = Some(self.frame.lock().get_single_render_view());
         Ok(pfd)
     }
 
