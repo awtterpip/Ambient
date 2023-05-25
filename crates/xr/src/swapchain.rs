@@ -63,7 +63,7 @@ impl Swapchain {
                                 mip_level_count: 1,
                                 sample_count: 1,
                                 dimension: wgpu::TextureDimension::D2,
-                                format: WGPU_COLOR_FORMAT,
+                                format: gpu.swapchain_format(),
                                 usage: wgpu_hal::TextureUses::COLOR_TARGET
                                     | wgpu_hal::TextureUses::COPY_DST,
                                 memory_flags: wgpu_hal::MemoryFlags::empty(),
@@ -85,7 +85,7 @@ impl Swapchain {
                                 mip_level_count: 1,
                                 sample_count: 1,
                                 dimension: wgpu::TextureDimension::D2,
-                                format: WGPU_COLOR_FORMAT,
+                                format: gpu.swapchain_format(),
                                 usage: wgpu::TextureUsages::RENDER_ATTACHMENT
                                     | wgpu::TextureUsages::COPY_DST,
                                 view_formats: &[],

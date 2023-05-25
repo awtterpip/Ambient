@@ -285,7 +285,9 @@ impl XrState {
         }?;
 
         let surface = window.map(|window| unsafe { wgpu_instance.create_surface(window).unwrap() });
-        let swapchain_format = Some(wgpu::TextureFormat::Rgba8UnormSrgb);
+        let swapchain_format = surface
+            .as_ref()
+            .map(|surface| surface.get_capabilities(&wgpu_adapter).formats[0]);
         tracing::info!("Swapchain format: {swapchain_format:?}");
         let swapchain_mode = if surface.is_some() {
             if settings.vsync() {
