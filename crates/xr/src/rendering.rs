@@ -34,7 +34,7 @@ impl FrameInner {
             Swapchain::new(self.gpu.clone(), self.session.clone(), self.views[0])
         });
 
-        swapchain.get_render_view()
+        swapchain.get_single_render_view()
     }
 
     pub fn post_queue_submit(
